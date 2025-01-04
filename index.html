@@ -18,7 +18,8 @@
 <body>
 
 <div class="container">
-    <h1>Student Mental Health AI</h1>
+    <h1>Student Mental Health and Wellbeing Assistant</h1>
+
     <form id="mentalHealthForm">
         <div class="input-container">
             <label for="feelings">How are you feeling today?</label>
@@ -30,25 +31,27 @@
     <div class="result" id="result" style="display: none;"></div>
 </div>
 
+<p id="disclaimer">This AI mental health assistant is not a substitute for professional care. For emergencies or serious concerns, contact a licensed mental health professional or emergency services. While the AI aims to provide supportive and accurate information, its responses may not always be fully reliable. Avoid sharing sensitive personal details. Use responsibly and verify information as needed.</p>
+
 <script>
-    // document.getElementById('mentalHealthForm').addEventListener('submit', function(event) {
-    //     event.preventDefault();
+    document.getElementById('mentalHealthForm').addEventListener('submit', function(event) {
+        event.preventDefault();
 
-    //     var feelings = document.getElementById('feelings').value;
+        var feelings = document.getElementById('feelings').value;
 
-    //     fetch('/submit', {
-    //         method: 'POST',
-    //         headers: {
-    //             'Content-Type': 'application/x-www-form-urlencoded'
-    //         },
-    //         body: 'feelings=' + encodeURIComponent(feelings)
-    //     })
-    //     .then(response => response.json())
-    //     .then(data => {
-    //         document.getElementById('result').innerText = data.suggestion;
-    //         document.getElementById('result').style.display = 'block';
-    //     });
-    // });
+        fetch('/submit', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: 'feelings=' + encodeURIComponent(feelings)
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('result').innerText = data.suggestion;
+            document.getElementById('result').style.display = 'block';
+        });
+    });
 </script>
 
 </body>
