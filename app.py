@@ -31,7 +31,7 @@ def preprocess_text(text):
 def train_sentiment_model():
     pass
 
-# Initialize the sentiment model
+# Initialse sentiment model
 vectorizer, sentiment_model = train_sentiment_model()
 
 # Function to predict sentiment using ML model
