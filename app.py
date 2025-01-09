@@ -13,7 +13,7 @@ app = Flask(__name__)
 # Sentiment Analysis Pipeline using Huggingface
 sentiment_analyzer = pipeline("sentiment-analysis")
 
-# NLTK Resources
+# NLTK Resources for preprocessing instead of custom preprocessing
 nltk.download('punkt')
 nltk.download('stopwords')
 nltk.download('wordnet')
@@ -31,13 +31,13 @@ def preprocess_text(text):
 def train_sentiment_model():
     pass
 
-# Initialse sentiment model
-vectorizer, sentiment_model = train_sentiment_model()
+# Initialise sentiment model
+vectoriser, sentiment_model = train_sentiment_model()
 
 # Function to predict sentiment using ML model
 def predict_sentiment(text):
     processed_text = preprocess_text(text)
-    vectorized_text = vectorizer.transform([processed_text])
+    vectorized_text = vectoriser.transform([processed_text])
     sentiment = sentiment_model.predict(vectorized_text)
     return sentiment[0]
 
