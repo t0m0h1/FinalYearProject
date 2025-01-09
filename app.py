@@ -10,7 +10,7 @@ nltk.download('punkt')
 nltk.download('stopwords')
 nltk.download('wordnet')
 
-# Initialize Flask app
+# Initialise Flask app
 app = Flask(__name__)
 
 # Load model and vectorizer
