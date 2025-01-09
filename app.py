@@ -1,55 +1,34 @@
 from flask import Flask, render_template, request, jsonify
-import nltk
+import pickle
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.svm import SVC
-from transformers import pipeline
+import nltk
 
-# Initialize Flask app
-app = Flask(__name__)
-
-# Sentiment Analysis Pipeline using Huggingface
-sentiment_analyzer = pipeline("sentiment-analysis")
-
-# NLTK Resources for preprocessing instead of custom preprocessing
+# Download NLTK resources
 nltk.download('punkt')
 nltk.download('stopwords')
 nltk.download('wordnet')
 
-# Preprocess Text
+# Initialize Flask app
+app = Flask(__name__)
+
+# Load model and vectorizer
+with open("sentiment_model.pkl", "rb") as model_file:
+    sentiment_model = pickle.load(model_file)
+
+with open("vectorizer.pkl", "rb") as vec_file:
+    vectorizer = pickle.load(vec_file)
+
+# Preprocess text
 def preprocess_text(text):
+    """Cleans and preprocesses input text."""
     stop_words = set(stopwords.words('english'))
     word_tokens = word_tokenize(text.lower())
-    filtered_words = [word for word in word_tokens if word not in stop_words]
+    filtered_words = [word for word in word_tokens if word.isalnum() and word not in stop_words]
     lemmatizer = WordNetLemmatizer()
     lemmatized_words = [lemmatizer.lemmatize(word) for word in filtered_words]
     return " ".join(lemmatized_words)
-
-# Train Sentiment Model (simplified example)
-def train_sentiment_model():
-    pass
-
-# Initialise sentiment model
-vectoriser, sentiment_model = train_sentiment_model()
-
-# Function to predict sentiment using ML model
-def predict_sentiment(text):
-    processed_text = preprocess_text(text)
-    vectorized_text = vectoriser.transform([processed_text])
-    sentiment = sentiment_model.predict(vectorized_text)
-    return sentiment[0]
-
-# Function to provide suggestions based on sentiment
-def get_suggestions(sentiment):
-    if sentiment == 0:
-        return "You might be feeling down. It's okay to reach out to someone, take a break, or try some stress-relief activities."
-    elif sentiment == 1:
-        return "Great to hear that you're feeling positive! Keep it up and stay connected with your support network."
-    else:
-        return "It seems like you're uncertain. Maybe talking to someone or reflecting might help clarify things."
-
 
 # Routes
 @app.route('/')
@@ -58,19 +37,14 @@ def index():
 
 @app.route('/submit', methods=['POST'])
 def submit():
-    student_input = request.form['feelings']
-    
-    # Sentiment analysis using Huggingface model
-    sentiment = sentiment_analyzer(student_input)[0]['label']
-    if sentiment == 'NEGATIVE':
-        sentiment = 0  # Negative sentiment
-    else:
-        sentiment = 1  # Positive sentiment
+    user_input = request.form['feelings']
+    preprocessed_input = preprocess_text(user_input)
+    vectorized_input = vectorizer.transform([preprocessed_input])
+    sentiment = sentiment_model.predict(vectorized_input)[0]
 
-    # Get suggestion based on sentiment
-    suggestion = get_suggestions(sentiment)
-
+    # Generate suggestion
+    suggestion = "Positive!" if sentiment == 1 else "Negative!"
     return jsonify({'suggestion': suggestion})
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(debug=True)
