@@ -6,7 +6,7 @@ from sklearn.metrics import classification_report
 import pandas as pd
 
 # Load dataset
-def load_data(file_path="data.csv"):
+def load_data(file_path="training_data/data.csv"):
     """Loads the dataset and returns text and labels."""
     data = pd.read_csv(file_path)  # Ensure this CSV contains 'text' and 'sentiment' columns
     return data['text'], data['sentiment']
