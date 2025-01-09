@@ -1,5 +1,4 @@
 1. User Research and Requirement Gathering
-- Conduct surveys and interviews with students, counselors, and educators.
 - Identify key pain points in accessing mental health resources.
 - Define user personas and user journeys.
 
