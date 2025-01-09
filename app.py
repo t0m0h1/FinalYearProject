@@ -10,6 +10,7 @@ nltk.download('punkt')
 nltk.download('stopwords')
 nltk.download('wordnet')
 
+
 # Initialise Flask app
 app = Flask(__name__)
 
