@@ -1,24 +1,266 @@
-body { font-family: Arial, sans-serif; background-color: #f4f4f9; padding: 20px; 
+/* Global Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
 }
 
-.container { max-width: 600px; margin: 0 auto; padding: 20px; background-color: white; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+/* Body */
+body {
+    background-color: #f4f7fc;
+    color: #333;
+    line-height: 1.6;
+    padding: 20px;
 }
 
-h1 { text-align: center; 
+/* Container */
+.container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 40px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    margin-bottom: 40px;
 }
 
-.input-container { margin-bottom: 20px; 
+/* Header */
+h1 {
+    text-align: center;
+    color: #4a90e2;
+    font-size: 32px;
+    margin-bottom: 20px;
 }
 
-textarea { width: 100%; padding: 10px; font-size: 14px; border-radius: 4px; border: 1px solid #ccc; 
+/* Form */
+#mentalHealthForm {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
-button { width: 100%; padding: 10px; font-size: 16px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; 
+.input-container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
 }
 
-button:hover { background-color: #45a049; 
+label {
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 8px;
 }
 
-.result { margin-top: 20px; padding: 15px; background-color: #e3f2f9; border: 1px solid #b3e0ff; border-radius: 5px; 
+textarea {
+    padding: 12px;
+    font-size: 18px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    resize: vertical;
+    min-height: 120px;
+    max-width: 100%;
 }
 
+button {
+    padding: 12px 24px;
+    background-color: #4a90e2;
+    color: #fff;
+    font-size: 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+}
+
+button:hover {
+    background-color: #357ab7;
+}
+
+.result {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #e1f5fe;
+    border: 1px solid #b3e5fc;
+    border-radius: 8px;
+    font-size: 18px;
+    display: none;
+}
+
+/* Sections */
+section {
+    margin-top: 50px;
+}
+
+section h2 {
+    color: #4a90e2;
+    font-size: 28px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+section ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+section ul li {
+    padding: 12px 0;
+    font-size: 18px;
+    line-height: 1.5;
+    border-bottom: 1px solid #ddd;
+}
+
+section ul li:last-child {
+    border-bottom: none;
+}
+
+section ul li a {
+    color: #4a90e2;
+    text-decoration: none;
+}
+
+section ul li a:hover {
+    text-decoration: underline;
+}
+
+/* FAQ Section */
+.faq-item {
+    margin-bottom: 30px;
+}
+
+.faq-item h3 {
+    font-size: 20px;
+    color: #333;
+    font-weight: bold;
+    margin-bottom: 12px;
+}
+
+.faq-item p {
+    font-size: 18px;
+    color: #555;
+    line-height: 1.6;
+}
+
+/* Disclaimer */
+#disclaimer {
+    text-align: center;
+    font-size: 14px;
+    color: #777;
+    margin-top: 50px;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 1024px) {
+    .container {
+        margin: 20px;
+        padding: 30px;
+    }
+
+    h1 {
+        font-size: 28px;
+    }
+
+    #mentalHealthForm {
+        gap: 15px;
+    }
+
+    textarea {
+        font-size: 16px;
+        min-height: 100px;
+    }
+
+    button {
+        font-size: 16px;
+    }
+
+    section h2 {
+        font-size: 24px;
+    }
+
+    .faq-item h3 {
+        font-size: 18px;
+    }
+
+    .faq-item p {
+        font-size: 16px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .container {
+        padding: 20px;
+        margin: 15px;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+
+    #mentalHealthForm {
+        gap: 10px;
+    }
+
+    textarea {
+        font-size: 16px;
+        min-height: 100px;
+    }
+
+    button {
+        font-size: 16px;
+    }
+
+    section h2 {
+        font-size: 22px;
+    }
+
+    .faq-item h3 {
+        font-size: 16px;
+    }
+
+    .faq-item p {
+        font-size: 14px;
+    }
+
+    #disclaimer {
+        font-size: 12px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+
+    .container {
+        padding: 15px;
+        margin: 10px;
+    }
+
+    h1 {
+        font-size: 22px;
+    }
+
+    textarea {
+        font-size: 14px;
+        min-height: 80px;
+    }
+
+    button {
+        font-size: 14px;
+    }
+
+    section h2 {
+        font-size: 20px;
+    }
+
+    .faq-item h3 {
+        font-size: 14px;
+    }
+
+    .faq-item p {
+        font-size: 12px;
+    }
+}
