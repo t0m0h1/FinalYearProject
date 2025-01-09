@@ -4,6 +4,8 @@ Student Mental Health Web Application
 
 Issues log.
 
+Still have issues finding the template/ getting server to find html
+
 use python 3.9.12 for now.
 
 Check column names in training data match those in the code.
