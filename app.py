@@ -5,6 +5,7 @@ import numpy as np
 from tensorflow.keras.models import load_model
 import nltk
 from nltk.stem import WordNetLemmatizer
+import random
 
 # Initialise Flask app
 app = Flask(__name__)
