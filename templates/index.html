@@ -138,6 +138,50 @@
                 moodSelect.value = '';
             }
         });
+
+
+        // Chatbot functionality
+        const chatForm = document.getElementById('chat-form');
+        const messageInput = document.getElementById('message-input');
+        const chatBox = document.getElementById('chat-box');
+
+        // Handle chat form submission
+        chatForm.addEventListener('submit', async (event) => {
+            event.preventDefault(); // Prevent page reload
+    
+        const userMessage = messageInput.value.trim();
+        if (!userMessage) return;
+
+        // Display the user's message in the chatbox
+        chatBox.innerHTML += `<div class="user-message">${userMessage}</div>`;
+        chatBox.scrollTop = chatBox.scrollHeight; // Scroll to the bottom of the chatbox
+
+        // Clear the input field
+        messageInput.value = '';
+
+        try {
+            // Send the user's message to the Flask backend
+            const response = await fetch('/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ message: userMessage }),
+            });
+
+            // Parse the response from the backend
+            const data = await response.json();
+            const botResponse = data.response;
+
+            // Display the bot's response in the chatbox
+            chatBox.innerHTML += `<div class="bot-response">${botResponse}</div>`;
+            chatBox.scrollTop = chatBox.scrollHeight; // Scroll to the bottom of the chatbox
+        } catch (error) {
+            console.error('Error communicating with the chatbot:', error);
+            chatBox.innerHTML += `<div class="bot-response text-danger">Sorry, something went wrong. Please try again later.</div>`;
+            }
+    });
     </script>
+
 </body>
 </html>
