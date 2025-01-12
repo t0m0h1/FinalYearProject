@@ -1,3 +1,5 @@
+# This file only needs to be run once to train the model. The trained model is saved to chatbot_model.h5 and can be loaded in the app.py file to generate responses to user input.
+
 import random
 import json
 import pickle
@@ -79,3 +81,4 @@ hist = model.fit(train_x, train_y, epochs=200, batch_size=5, verbose=1)
 model.save('chatbot_model.h5', hist)
 
 print('Done')
+
