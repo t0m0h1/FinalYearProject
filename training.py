@@ -12,10 +12,19 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Activation, Dropout
 from tensorflow.keras.optimizers import SGD
 
-lemmatizer = WordNetLemmatizer()
+lemmatiser = WordNetLemmatizer()
 
 # Load intents from JSON file
-intents = json.loads(open('intents.json').read())
+try:
+    with open('intents.json') as file:
+        intents = json.load(file)
+except FileNotFoundError:
+    print("File not found")
+except json.JSONDecodeError:
+    print("Invalid JSON")
+    exit()
+
+
 
 words = []
 classes = []
@@ -32,7 +41,7 @@ for intent in intents['intents']:
             classes.append(intent['tag'])
 
 # Lemmatise words and remove ignored letters
-words = [lemmatizer.lemmatize(word) for word in words if word not in ignore_letters]
+words = [lemmatiser.lemmatize(word) for word in words if word not in ignore_letters]
 words = sorted(set(words))
 
 classes = sorted(set(classes))
@@ -48,7 +57,7 @@ output_empty = [0] * len(classes)
 for document in documents:
     bag = []
     word_patterns = document[0]
-    word_patterns = [lemmatizer.lemmatize(word.lower()) for word in word_patterns]
+    word_patterns = [lemmatiser.lemmatize(word.lower()) for word in word_patterns]
     for word in words:
         bag.append(1) if word in word_patterns else bag.append(0)
 
