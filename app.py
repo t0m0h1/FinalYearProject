@@ -57,7 +57,7 @@ def get_response(tag, intents_file='intents.json'):
 
 @app.route('/')
 def home():
-    return render_template('index.html')  # Placeholder HTML for the chatbot interface
+    return render_template('index.html')  # HTML for the chatbot interface
 
 @app.route('/chat', methods=['POST'])
 def chat():
@@ -81,11 +81,6 @@ if __name__ == '__main__':
     nltk.download('punkt')
     nltk.download('wordnet')
     app.run(debug=True)
-
-
-
-
-
 
 
 
