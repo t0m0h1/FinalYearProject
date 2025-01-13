@@ -14,8 +14,8 @@
 
 ## 3.1 Chatbot Features
 
-- Enable 24/7 support via text and voice.
-- Provide guided mental health exercises (e.g., mindfulness, breathing techniques).
+- Enable 24/7 support via text.
+- Provide guided mental health exercises (e.g., mindfulness, breathing techniques). ✔️
 - Offer quick links to crisis helplines and professional counseling services.
 - Answer frequently asked questions about mental health and well-being.
 
