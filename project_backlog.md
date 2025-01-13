@@ -1,7 +1,7 @@
 # User Research and Requirement Gathering
 
-- Identify key pain points in accessing mental health resources.
-- Define user personas and user journeys.
+- Identify key pain points in accessing mental health resources. ✔️
+- Define user personas and user journeys. ℹ️
 
 # System Design and Architecture
 
