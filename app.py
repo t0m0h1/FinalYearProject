@@ -6,6 +6,7 @@ from tensorflow.keras.models import load_model
 import nltk
 from nltk.stem import WordNetLemmatizer
 import random
+import json
 
 # Initialise Flask app
 app = Flask(__name__)
@@ -48,10 +49,12 @@ def predict_tag(sentence):
     results.sort(key=lambda x: x[1], reverse=True)
     return classes[results[0][0]] if results else None
 
-# Map tag to response
+
+# Map tag to response    
 def get_response(tag, intents_file='intents.json'):
     try:
-        intents = pickle.load(open('intents.pkl', 'rb'))
+        with open(intents_file, 'r') as file:
+            intents = json.load(file)
         for intent in intents['intents']:
             if intent['tag'] == tag:
                 return random.choice(intent['responses'])
@@ -61,6 +64,9 @@ def get_response(tag, intents_file='intents.json'):
     except Exception as e:
         return f"Error: {str(e)}"
 
+
+
+# Routes
 @app.route('/')
 def home():
     return render_template('index.html')  # HTML for the chatbot interface
