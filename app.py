@@ -14,7 +14,7 @@ app = Flask(__name__)
 model = load_model('chatbot_model.h5')
 words = pickle.load(open('words.pkl', 'rb'))
 classes = pickle.load(open('classes.pkl', 'rb'))
-lemmatizer = WordNetLemmatizer()
+lemmatiser = WordNetLemmatizer()
 
 # Example data for FAQ and resources
 FAQ = [
@@ -35,7 +35,7 @@ GUIDED_EXERCISES = {
 # Preprocess input
 def preprocess_input(sentence):
     sentence_words = nltk.word_tokenize(sentence)
-    sentence_words = [lemmatizer.lemmatize(word.lower()) for word in sentence_words]
+    sentence_words = [lemmatiser.lemmatize(word.lower()) for word in sentence_words]
     bag = [1 if word in sentence_words else 0 for word in words]
     return np.array(bag)
 
@@ -84,8 +84,8 @@ def get_time():
     return jsonify({"time": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")})
 
 if __name__ == '__main__':
-    nltk.download('punkt')
-    nltk.download('wordnet')
+    nltk.download('punkt', quiet=True)
+    nltk.download('wordnet', quiet=True)
     app.run(debug=True)
 
 
