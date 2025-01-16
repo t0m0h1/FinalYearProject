@@ -50,11 +50,16 @@ def predict_tag(sentence):
 
 # Map tag to response
 def get_response(tag, intents_file='intents.json'):
-    intents = pickle.load(open('intents.pkl', 'rb'))
-    for intent in intents['intents']:
-        if intent['tag'] == tag:
-            return random.choice(intent['responses'])
-    return "I'm sorry, I didn't quite understand that."
+    try:
+        intents = pickle.load(open('intents.pkl', 'rb'))
+        for intent in intents['intents']:
+            if intent['tag'] == tag:
+                return random.choice(intent['responses'])
+        return "I'm sorry, I didn't quite understand that."
+    except FileNotFoundError:
+        return "Error: Intents file not found."
+    except Exception as e:
+        return f"Error: {str(e)}"
 
 @app.route('/')
 def home():
