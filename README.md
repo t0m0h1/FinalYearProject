@@ -14,3 +14,6 @@ Check column names in training data match those in the code.
 Be careful using Windows. may have to create new virtual environment.
 
 Is it loading intents.pkl or intents.json?
+
+
+### Add js code to communicate with the flask
