@@ -7,6 +7,7 @@ import nltk
 from nltk.stem import WordNetLemmatizer
 import random
 import json
+import sqlite3
 
 # Initialise Flask app
 app = Flask(__name__)
@@ -89,6 +90,44 @@ def chat():
 def get_time():
     return jsonify({"time": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")})
 
+
+
+
+# flask route to save data
+@app.route('/save_mood', methods=['POST'])
+def save_mood():
+    data = request.json
+    mood = data['mood']
+    date = data['date']
+
+    # Save to SQLite database
+    conn = sqlite3.connect('moods.db')
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO moods (date, mood) VALUES (?, ?)", (date, mood))
+    conn.commit()
+    conn.close()
+
+    return jsonify({"message": "Mood saved successfully"})
+
+
+
+# flask route to get data
+@app.route('/get_moods', methods=['GET'])
+def get_moods():
+    conn = sqlite3.connect('moods.db')
+    cursor = conn.cursor()
+    cursor.execute("SELECT date, mood FROM moods")
+    moods = cursor.fetchall()
+    conn.close()
+
+    return jsonify(moods)
+
+
+
+
+
+
+# driver code
 if __name__ == '__main__':
     nltk.download('punkt', quiet=True)
     nltk.download('wordnet', quiet=True)
