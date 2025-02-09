@@ -74,8 +74,13 @@ def home():
 
 @app.route('/chat', methods=['POST'])
 def chat():
-    user_message = request.json.get('message', '').lower()
-    response = ""
+    user_message = request.json.get('message', '')
+    
+    if not isinstance(user_message, str):
+        return jsonify({"response": "Invalid input."})
+    
+    user_message = user_message.lower()
+
 
     # Predict response dynamically
     tag = predict_tag(user_message)
