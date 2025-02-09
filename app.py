@@ -34,6 +34,10 @@ GUIDED_EXERCISES = {
     "breathing": "Try the 4-7-8 technique: Breathe in through your nose for 4 seconds, hold your breath for 7 seconds, and exhale slowly through your mouth for 8 seconds. Repeat 4 times."
 }
 
+# add more to this data as this is currently placeholder data.
+
+
+
 # Preprocess input
 def preprocess_input(sentence):
     sentence_words = nltk.word_tokenize(sentence)
