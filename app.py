@@ -91,6 +91,8 @@ def chat():
 
     return jsonify({"response": response})
 
+
+
 @app.route('/time', methods=['GET'])
 def get_time():
     return jsonify({"time": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")})
