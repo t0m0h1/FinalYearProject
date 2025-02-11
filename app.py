@@ -71,29 +71,40 @@ def get_response(tag, intents_file='intents.json'):
 
 
 
-# Routes
+# Routes - these are the functions the app will respond to
 @app.route('/')
 def home():
     return render_template('index.html')  # HTML for the chatbot interface
 
+
+
+# app will find related faqs if no confident prediction is made.
+def find_related_faqs(user_message):
+    user_message = user_message.lower()
+    for faq in FAQ:
+        if any(word in user_message for word in faq["question"].lower().split()):
+            return faq["answer"]
+    return None
+
 @app.route('/chat', methods=['POST'])
 def chat():
-    user_message = request.json.get('message', '')
+    user_message = request.json.get('message', '').lower()
     
     if not isinstance(user_message, str):
         return jsonify({"response": "Invalid input."})
     
-    user_message = user_message.lower()
-
-
-    # Predict response dynamically
     tag = predict_tag(user_message)
     if tag:
         response = get_response(tag)
     else:
-        response = "I'm here to help! You can ask about exercises, crisis support, or FAQs."
+        response = find_related_faqs(user_message) or "I'm here to help! You can ask about exercises, crisis support, or FAQs."
 
     return jsonify({"response": response})
+
+
+
+
+
 
 
 
@@ -135,6 +146,16 @@ def get_moods():
 
 
 
+# Create SQLite database if it doesn't exist
+def init_db():
+    conn = sqlite3.connect('moods.db')
+    cursor = conn.cursor()
+    cursor.execute('''CREATE TABLE IF NOT EXISTS moods (id INTEGER PRIMARY KEY, date TEXT, mood TEXT)''')
+    conn.commit()
+    conn.close()
+
+
+
 
 
 
@@ -143,6 +164,7 @@ if __name__ == '__main__':
     nltk.download('punkt', quiet=True)
     nltk.download('wordnet', quiet=True)
     app.run(debug=True)
+    init_db()  # Run this when the app starts
 
 
 
