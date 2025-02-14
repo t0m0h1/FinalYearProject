@@ -18,21 +18,82 @@ words = pickle.load(open('words.pkl', 'rb'))
 classes = pickle.load(open('classes.pkl', 'rb'))
 lemmatiser = WordNetLemmatizer()
 
-# Example data for FAQ and resources
-FAQ = [
-    {"question": "What is mental health?", "answer": "Mental health includes our emotional, psychological, and social well-being. It affects how we think, feel, and act."},
-    {"question": "How can I manage stress?", "answer": "You can manage stress by exercising, practising mindfulness, staying organised, and seeking support from friends or professionals."}
-]
 
-CRISIS_HELPLINES = [
-    {"name": "National Suicide Prevention Lifeline", "number": "1-800-273-TALK"},
-    {"name": "Crisis Text Line", "text": "Text HOME to 741741"}
-]
+# data for FAQ and resources
+
+FAQ = {
+    "General Mental Health": [
+        {
+            "questions": ["What is mental health?", "Can you define mental health?"],
+            "answer": "Mental health includes our emotional, psychological, and social well-being."
+        }
+    ],
+    "Stress Management": [
+        {
+            "questions": ["How do I manage stress?", "What are some stress relief techniques?"],
+            "answer": "You can manage stress by exercising, practicing mindfulness, and seeking support."
+        },
+        {
+            "questions": ["What are some quick ways to relieve stress?"],
+            "answer": "Try deep breathing, progressive muscle relaxation, or listening to calming music."
+        }
+    ]
+}
+
+
+CRISIS_HELPLINES = {
+    "USA": [
+        {
+            "name": "National Suicide Prevention Lifeline",
+            "phone": "1-800-273-TALK",
+            "text": "Text HOME to 741741",
+            "chat": "https://suicidepreventionlifeline.org/chat",
+            "available": "24/7"
+        }
+    ],
+    "UK": [
+        {
+            "name": "Samaritans",
+            "phone": "116 123",
+            "email": "jo@samaritans.org",
+            "chat": "https://www.samaritans.org",
+            "available": "24/7"
+        }
+    ]
+}
+
 
 GUIDED_EXERCISES = {
-    "mindfulness": "Take a moment to sit comfortably and focus on your breath. Inhale deeply through your nose for 4 seconds, hold for 4 seconds, and exhale through your mouth for 4 seconds. Repeat for 5 minutes.",
-    "breathing": "Try the 4-7-8 technique: Breathe in through your nose for 4 seconds, hold your breath for 7 seconds, and exhale slowly through your mouth for 8 seconds. Repeat 4 times."
+    "breathing": [
+        {
+            "name": "4-7-8 Breathing",
+            "difficulty": "Beginner",
+            "duration": "5 minutes",
+            "instructions": "Breathe in for 4 seconds, hold for 7 seconds, and exhale for 8 seconds.",
+        },
+        {
+            "name": "Box Breathing",
+            "difficulty": "Intermediate",
+            "duration": "5 minutes",
+            "instructions": "Inhale for 4 seconds, hold for 4 seconds, exhale for 4 seconds, hold for 4 seconds. Repeat.",
+        }
+    ],
+    "mindfulness": [
+        {
+            "name": "5-4-3-2-1 Grounding",
+            "difficulty": "Beginner",
+            "duration": "5 minutes",
+            "instructions": "Identify 5 things you see, 4 things you feel, 3 things you hear, 2 things you smell, and 1 thing you taste.",
+        },
+        {
+            "name": "Body Scan Meditation",
+            "difficulty": "Advanced",
+            "duration": "10 minutes",
+            "instructions": "Slowly bring attention to each part of your body, from your toes to your head, noticing any sensations.",
+        }
+    ]
 }
+
 
 # add more to this data as this is currently placeholder data.
 
