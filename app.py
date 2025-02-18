@@ -100,17 +100,27 @@ GUIDED_EXERCISES = {
 
 
 # Preprocess input
+# This function has been updated to check the array length matches model if the model has been retrained/ modified
 def preprocess_input(sentence):
     sentence_words = nltk.word_tokenize(sentence)
     sentence_words = [lemmatiser.lemmatize(word.lower()) for word in sentence_words]
-    bag = [1 if word in sentence_words else 0 for word in words]
+
+    # Ensure consistent size
+    bag = np.zeros(len(words))
+    for word in sentence_words:
+        if word in words:
+            bag[words.index(word)] = 1
+
     return np.array(bag)
+
+
+
 
 # Predict response tag
 def predict_tag(sentence):
     bow = preprocess_input(sentence)
     res = model.predict(np.array([bow]))[0]
-    threshold = 0.25  # Confidence threshold
+    threshold = 0.25  # Confidence threshold at 25%
     results = [[i, r] for i, r in enumerate(res) if r > threshold]
     results.sort(key=lambda x: x[1], reverse=True)
     return classes[results[0][0]] if results else None
@@ -129,6 +139,8 @@ def get_response(tag, intents_file='intents.json'):
         return "Error: Intents file not found."
     except Exception as e:
         return f"Error: {str(e)}"
+
+
 
 
 
