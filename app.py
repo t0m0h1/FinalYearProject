@@ -224,10 +224,9 @@ def init_db():
 if __name__ == '__main__':
     nltk.download('punkt', quiet=True)
     nltk.download('wordnet', quiet=True)
+    
+    init_db()  # Run this before starting the app
     app.run(debug=True)
-    init_db()  # Run this when the app starts
-
-
 
 
 
