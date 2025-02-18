@@ -9,6 +9,7 @@ import random
 import json
 import sqlite3
 
+
 # Initialise Flask app
 app = Flask(__name__)
 
