@@ -12,11 +12,17 @@ import sqlite3
 # Initialise Flask app
 app = Flask(__name__)
 
-# Load model and necessary data
-model = load_model('chatbot_model.h5')
-words = pickle.load(open('words.pkl', 'rb'))
-classes = pickle.load(open('classes.pkl', 'rb'))
+
 lemmatiser = WordNetLemmatizer()
+
+try:
+    model = load_model('chatbot_model.h5')
+    words = pickle.load(open('words.pkl', 'rb'))
+    classes = pickle.load(open('classes.pkl', 'rb'))
+except (OSError, FileNotFoundError) as e:
+    print(f"Error loading model/data: {e}")
+    model, words, classes = None, [], []
+
 
 
 # data for FAQ and resources
