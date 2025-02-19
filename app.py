@@ -27,7 +27,6 @@ except (OSError, FileNotFoundError) as e:
 
 
 # data for FAQ and resources
-
 FAQ = {
     "General Mental Health": [
         {
