@@ -9,6 +9,7 @@ from tensorflow.keras.models import Sequential
 from training import lemmatiser, intents, words, classes, training, model
 
 
+# Ensure that training.py has been run before running the tests
 
 
 class TestChatbotTraining(unittest.TestCase):
