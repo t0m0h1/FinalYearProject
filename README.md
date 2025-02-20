@@ -2,6 +2,10 @@
 Student Mental Health Web Application 
 
 
+### New features:
+- Maybe generate the FAQs next to or within the chat container.
+
+
 Issues log.
 
 Still have issues finding the template/ getting server to find html
@@ -13,6 +17,7 @@ Check column names in training data match those in the code.
 Be careful using Windows. may have to create new virtual environment.
 
 Is it loading intents.pkl or intents.json?
+
 
 
 ### Add js code to communicate with the flask
