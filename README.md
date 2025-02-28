@@ -20,4 +20,6 @@ Is it loading intents.pkl or intents.json?
 
 
 
-### Add js code to communicate with the flask
+### Add js code to communicate with the flask - done
+
+### Add continue as guest option in login html
