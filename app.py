@@ -236,8 +236,6 @@ def init_db():
 
 
 
-
-
 # driver code
 if __name__ == '__main__':
     nltk.download('punkt', quiet=True)
@@ -245,6 +243,9 @@ if __name__ == '__main__':
     
     init_db()  # Run this before starting the app
     app.run(debug=True)
+
+
+
 
 
 
