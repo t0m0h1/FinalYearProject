@@ -1,4 +1,10 @@
-from flask import Flask, render_template, request, jsonify
+# Flask imports 
+from flask import Flask, render_template, request, redirect, url_for, flash
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from werkzeug.security import generate_password_hash, check_password_hash
+
+# Other imports
 import datetime
 import pickle
 import numpy as np
@@ -10,10 +16,48 @@ import json
 import sqlite3
 
 
+
 # Initialise Flask app
 app = Flask(__name__)
 
+app.config['SECRET_KEY'] = '01' # I will change this later
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///moods.db' # SQLite database for storing mood data - will be created in the same directory as the app
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+db = SQLAlchemy(app)
+
+# Handle login
+login_manager = LoginManager()
+login_manager.login_view = 'login'
+login_manager.init_app(app)
+
+# Create user model (class user)
+class User(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(150), nullable=False)
+    email = db.Column(db.String(150), nullable=False, unique=True)
+    password = db.Column(db.String(150), nullable=False)
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+
+# Create database tables
+with app.app_context():
+    db.create_all()
+
+
+
+
+
+
+
+
+
+
+# Load model and data
 lemmatiser = WordNetLemmatizer()
 
 try:
@@ -102,6 +146,7 @@ GUIDED_EXERCISES = {
 
 
 # add more to this data as this is currently placeholder data.
+
 
 
 

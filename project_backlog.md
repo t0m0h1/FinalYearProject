@@ -18,6 +18,15 @@
 - Manage user sessions (using Flask-Login)
 - Redirect users after authentication
 
+- Implement User Registration
+- Allow users to sign up and store their credentials.
+- Implement User Login
+Authenticate users with email and password.
+- Protect Routes (Login Required)
+- Prevent unauthorized access to certain pages.
+- Implement Logout Functionality
+- Allow users to log out and destroy their session.
+
 ## 3.1 Chatbot Features
 
 - Enable 24/7 support via text.
