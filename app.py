@@ -49,6 +49,61 @@ with app.app_context():
     db.create_all()
 
 
+# Route for signing up
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    if request.method == 'POST':
+        name = request.form.get('name')
+        email = request.form.get('email')
+        password = request.form.get('password')
+
+        # Check if user already exists
+        user = User.query.filter_by(email=email).first()
+        if user:
+            flash('Email already registered!', category='error')
+            return redirect(url_for('signup'))
+
+        # Hash password and add user to database
+        new_user = User(
+            name=name,
+            email=email,
+            password=generate_password_hash(password, method='sha256')
+        )
+        db.session.add(new_user)
+        db.session.commit()
+
+        flash('Account created! You can now log in.', category='success')
+        return redirect(url_for('login'))
+
+    return render_template('signup.html')
+
+
+
+# Route for logging in
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+
+        user = User.query.filter_by(email=email).first()
+        if user and check_password_hash(user.password, password):
+            login_user(user)
+            flash('Login successful!', category='success')
+            return redirect(url_for('dashboard'))  # Change this to your home page
+        else:
+            flash('Invalid credentials, try again.', category='error')
+
+    return render_template('login.html')
+
+
+# Route for logging out
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash('Logged out successfully!', category='info')
+    return redirect(url_for('login'))
 
 
 
@@ -197,6 +252,7 @@ def get_response(tag, intents_file='intents.json'):
 
 # Routes - these are the functions the app will respond to
 @app.route('/')
+@login_required # This will redirect to the login page if the user is not logged in
 def home():
     return render_template('index.html')  # HTML for the chatbot interface
 
