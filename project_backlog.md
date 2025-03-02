@@ -12,11 +12,11 @@
 
 # Core Features Development
 
-Set up a user database (SQLite)
-Create routes for login and signup (/login, /signup)
-Hash passwords securely (using werkzeug.security)
-Manage user sessions (using Flask-Login)
-Redirect users after authentication
+- Set up a user database (SQLite)
+- Create routes for login and signup (/login, /signup)
+- Hash passwords securely (using werkzeug.security)
+- Manage user sessions (using Flask-Login)
+- Redirect users after authentication
 
 ## 3.1 Chatbot Features
 
