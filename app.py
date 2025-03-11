@@ -75,7 +75,7 @@ def signup():
         flash('Account created! You can now log in.', category='success')
         return redirect(url_for('login'))
 
-    return render_template('signup.html')
+    return render_template('login_signup.html')
 
 
 
@@ -94,7 +94,7 @@ def login():
         else:
             flash('Invalid credentials, try again.', category='error')
 
-    return render_template('login.html')
+    return render_template('login_signup.html')
 
 
 # Route for logging out
