@@ -18,6 +18,8 @@ Be careful using Windows. may have to create new virtual environment.
 
 Is it loading intents.pkl or intents.json?
 
+### Important:
+You may have to use python3.10 -m pip install commands to use some modules 
 
 
 ### Add js code to communicate with the flask - done
