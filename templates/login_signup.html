@@ -36,7 +36,7 @@
     <!-- Login Form -->
     <div class="container text-center" id="loginContainer">
         <h2>Login</h2>
-        <form>
+        <form id="loginForm">
             <div class="form-group">
                 <label for="loginEmail">Email address</label>
                 <input type="email" class="form-control" id="loginEmail" placeholder="Enter email" required>
@@ -85,18 +85,40 @@
         }
 
         // Handle login form submission
-        document.getElementById('loginContainer').querySelector('form').addEventListener('submit', function(e) {
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
-            console.log('Logging in with email:', email, 'and password:', password);
-            // Implement login logic here
 
-            // Redirect to home page
-            window.location.href = "index.html";
+            console.log('Logging in with email:', email, 'and password:', password);
+
+            // Send login data to the server
+            fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: email,
+                    password: password
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message === 'Login successful!') {
+                    // Redirect to home page
+                    window.location.href = data.redirect;
+                } else {
+                    alert(data.message);  // Show error message
+                }
+            })
+            .catch(error => {
+                console.error('Error during login:', error);
+                alert('Something went wrong. Please try again.');
+            });
         });
 
-        
+        // need to handle sign up form submission too
     </script>
 </body>
 </html>

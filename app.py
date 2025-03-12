@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
+
 # Other imports
 import datetime
 import pickle
@@ -14,6 +15,8 @@ from nltk.stem import WordNetLemmatizer
 import random
 import json
 import sqlite3
+from flask import jsonify
+
 
 
 
@@ -83,20 +86,23 @@ def signup():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        email = request.form.get('email')
-        password = request.form.get('password')
+        # Get the data sent from JavaScript
+        data = request.get_json()
+        email = data.get('email')
+        password = data.get('password')
 
+        # Proceed with the login logic
         user = User.query.filter_by(email=email).first()
         if user and check_password_hash(user.password, password):
             login_user(user)
             flash('Login successful!', category='success')
             print(f"User authenticated: {current_user.is_authenticated}")  # Debug statement
 
-            return redirect(url_for('home'))  # Redirect to the home page (chatbot) (index.html)
+            return jsonify({'message': 'Login successful!', 'redirect': url_for('home')})  # Respond with a success message and redirect URL
         else:
             flash('Invalid credentials, try again.', category='error')
 
-    return render_template('login_signup.html')
+    return jsonify({'message': 'Invalid request method.'}), 405  # In case of non-POST requests
 
 
 
