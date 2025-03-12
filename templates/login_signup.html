@@ -84,6 +84,18 @@
             window.location.href = "index.html"; // Example guest page
         }
 
+        // Handle login form submission
+        document.getElementById('loginContainer').querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            console.log('Logging in with email:', email, 'and password:', password);
+            // Implement login logic here
+
+            // Redirect to home page
+            window.location.href = "index.html";
+        });
+
         
     </script>
 </body>
