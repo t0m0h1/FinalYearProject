@@ -89,24 +89,38 @@ def signup():
 # Route for logging in
 @app.route('/login', methods=['POST'])
 def login():
-    if request.method == 'POST':
-        # Get the data sent from JavaScript
+    # Debugging: Print when the route is hit
+    print("Login POST request received")
+
+    # Ensure request contains JSON data
+    if request.is_json:
         data = request.get_json()
         email = data.get('email')
         password = data.get('password')
 
-        # Proceed with the login logic
+        # Handle missing data
+        if not email or not password:
+            return jsonify({'message': 'Email and password are required!'}), 400
+
+        # Fetch the user from the database
         user = User.query.filter_by(email=email).first()
+
         if user and check_password_hash(user.password, password):
+            # Successful login
             login_user(user)
             flash('Login successful!', category='success')
-            print(f"User authenticated: {current_user.is_authenticated}")  # Debug statement
+            print(f"User authenticated: {current_user.is_authenticated}")
 
-            return jsonify({'message': 'Login successful!', 'redirect': url_for('home')})  # Respond with a success message and redirect URL
+            return jsonify({
+                'message': 'Login successful!',
+                'redirect': url_for('home')  # Assuming 'home' is a defined route
+            })
         else:
             flash('Invalid credentials, try again.', category='error')
+            return jsonify({'message': 'Invalid credentials, try again.'}), 401
+    else:
+        return jsonify({'message': 'Request must be JSON!'}), 400
 
-    return jsonify({'message': 'Invalid request method.'}), 405  # In case of non-POST requests
 
 
 

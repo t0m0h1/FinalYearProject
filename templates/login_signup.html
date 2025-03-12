@@ -85,9 +85,13 @@
         }
 
 
-            // Handle login form submission
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+
+
+        // Handle login form submission
+        document.getElementById('loginForm').addEventListener('submit', function (e) {
+            e.preventDefault();  // Prevent the default form submission
+
+            // Get form values
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
 
@@ -106,14 +110,14 @@
             })
             .then(response => response.json())
             .then(data => {
-                // Log the response for debugging
                 console.log('Response from server:', data);
 
                 if (data.message === 'Login successful!') {
-                    // Redirect to home page
+                    // Redirect to home page after successful login
                     window.location.href = data.redirect;
                 } else {
-                    alert(data.message);  // Show error message
+                    // Show error message
+                    alert(data.message);
                 }
             })
             .catch(error => {
@@ -121,6 +125,7 @@
                 alert('Something went wrong. Please try again.');
             });
         });
+
 
 
         // need to handle sign up form submission too
