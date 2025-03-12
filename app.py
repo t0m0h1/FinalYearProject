@@ -90,11 +90,16 @@ def login():
         if user and check_password_hash(user.password, password):
             login_user(user)
             flash('Login successful!', category='success')
-            return redirect(url_for('dashboard'))  # Change this to your home page
+            print(f"User authenticated: {current_user.is_authenticated}")  # Debug statement
+
+            return redirect(url_for('home'))  # Redirect to the home page (chatbot) (index.html)
         else:
             flash('Invalid credentials, try again.', category='error')
 
     return render_template('login_signup.html')
+
+
+
 
 
 # Route for logging out
