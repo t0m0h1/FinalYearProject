@@ -111,6 +111,7 @@ def logout():
 
 
 
+# ---------------- Chatbot code ----------------
 
 # Load model and data
 lemmatiser = WordNetLemmatizer()
@@ -248,6 +249,7 @@ def get_response(tag, intents_file='intents.json'):
 
 
 
+# ---------------- Routes ----------------
 
 
 # Routes - these are the functions the app will respond to
@@ -295,46 +297,40 @@ def get_time():
 
 
 
+
+# ---------------- Mood Tracker/ Database ----------------
+
+
 # flask route to save data
+# Save mood using SQLAlchemy
 @app.route('/save_mood', methods=['POST'])
 def save_mood():
     data = request.json
     mood = data['mood']
     date = data['date']
 
-    # Save to SQLite database
-    conn = sqlite3.connect('moods.db')
-    cursor = conn.cursor()
-    cursor.execute("INSERT INTO moods (date, mood) VALUES (?, ?)", (date, mood))
-    conn.commit()
-    conn.close()
+    new_mood = Mood(date=date, mood=mood)
+    db.session.add(new_mood)
+    db.session.commit()
 
     return jsonify({"message": "Mood saved successfully"})
 
-
-
-# flask route to get data
+# Get moods using SQLAlchemy
 @app.route('/get_moods', methods=['GET'])
 def get_moods():
-    conn = sqlite3.connect('moods.db')
-    cursor = conn.cursor()
-    cursor.execute("SELECT date, mood FROM moods")
-    moods = cursor.fetchall()
-    conn.close()
+    moods = Mood.query.all()
+    return jsonify([(mood.date, mood.mood) for mood in moods])
 
-    return jsonify(moods)
-
-
-
-# Create SQLite database if it doesn't exist
-def init_db():
-    conn = sqlite3.connect('moods.db')
-    cursor = conn.cursor()
-    cursor.execute('''CREATE TABLE IF NOT EXISTS moods (id INTEGER PRIMARY KEY, date TEXT, mood TEXT)''')
-    conn.commit()
-    conn.close()
+# Define Mood model
+class Mood(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.String(100))
+    mood = db.Column(db.String(50))
 
 
+
+
+# ---------------- Run app ----------------
 
 
 # driver code
@@ -342,7 +338,7 @@ if __name__ == '__main__':
     nltk.download('punkt', quiet=True)
     nltk.download('wordnet', quiet=True)
     
-    init_db()  # Run this before starting the app
+
     app.run(debug=True)
 
 
