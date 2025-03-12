@@ -84,7 +84,8 @@
             window.location.href = "index.html"; // Example guest page
         }
 
-        // Handle login form submission
+
+            // Handle login form submission
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const email = document.getElementById('loginEmail').value;
@@ -105,6 +106,9 @@
             })
             .then(response => response.json())
             .then(data => {
+                // Log the response for debugging
+                console.log('Response from server:', data);
+
                 if (data.message === 'Login successful!') {
                     // Redirect to home page
                     window.location.href = data.redirect;
@@ -117,6 +121,7 @@
                 alert('Something went wrong. Please try again.');
             });
         });
+
 
         // need to handle sign up form submission too
     </script>

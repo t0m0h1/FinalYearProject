@@ -4,6 +4,9 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
+from flask_cors import CORS # For cross-origin requests
+
+
 
 # Other imports
 import datetime
@@ -22,6 +25,7 @@ from flask import jsonify
 
 # Initialise Flask app
 app = Flask(__name__)
+CORS(app)
 
 app.config['SECRET_KEY'] = '01' # I will change this later
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///moods.db' # SQLite database for storing mood data - will be created in the same directory as the app
@@ -83,7 +87,7 @@ def signup():
 
 
 # Route for logging in
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login', methods=['POST'])
 def login():
     if request.method == 'POST':
         # Get the data sent from JavaScript
