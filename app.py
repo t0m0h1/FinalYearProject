@@ -82,45 +82,37 @@ def signup():
         flash('Account created! You can now log in.', category='success')
         return redirect(url_for('login'))
 
-    return render_template('login_signup.html')
+    return render_template('signup.html')
 
 
 
-# Route for logging in
+
+# Route to render login form (GET request)
+@app.route('/login', methods=['GET'])
+def login_page():
+    return render_template('login.html')  # Assuming you have a 'login.html' template
+
+# Route to handle login submission (POST request)
 @app.route('/login', methods=['POST'])
 def login():
-    # Debugging: Print when the route is hit
-    print("Login POST request received")
+    data = request.get_json()  # Get the data sent from JavaScript
+    email = data.get('email')
+    password = data.get('password')
 
-    # Ensure request contains JSON data
-    if request.is_json:
-        data = request.get_json()
-        email = data.get('email')
-        password = data.get('password')
+    # Check for missing fields
+    if not email or not password:
+        return jsonify({'message': 'Email and password are required!'}), 400
 
-        # Handle missing data
-        if not email or not password:
-            return jsonify({'message': 'Email and password are required!'}), 400
+    # Attempt to authenticate user
+    user = User.query.filter_by(email=email).first()
 
-        # Fetch the user from the database
-        user = User.query.filter_by(email=email).first()
+    if user and check_password_hash(user.password, password):
+        login_user(user)  # Log the user in using Flask-Login
+        flash('Login successful!', category='success')
+        return jsonify({'message': 'Login successful!', 'redirect': url_for('home')})
 
-        if user and check_password_hash(user.password, password):
-            # Successful login
-            login_user(user)
-            flash('Login successful!', category='success')
-            print(f"User authenticated: {current_user.is_authenticated}")
-
-            return jsonify({
-                'message': 'Login successful!',
-                'redirect': url_for('home')  # Assuming 'home' is a defined route
-            })
-        else:
-            flash('Invalid credentials, try again.', category='error')
-            return jsonify({'message': 'Invalid credentials, try again.'}), 401
-    else:
-        return jsonify({'message': 'Request must be JSON!'}), 400
-
+    flash('Invalid credentials, please try again.', category='error')
+    return jsonify({'message': 'Invalid credentials, try again.'}), 401
 
 
 
