@@ -130,6 +130,12 @@
             <!-- FAQs will be populated here -->
              <!--  -->
         </div>
+
+        <!-- Logout Button -->
+        <div class="text-center mt-4">
+            <button class="btn btn-danger" onclick="logout()">Log Out</button>
+        </div>
+        
     </div>
 
 
@@ -252,11 +258,16 @@
 
 
     // add more functionality below:
-    
+    function logout() {
+        // Example: Clear session storage or perform logout actions
+        alert("You have been logged out.");
+        // Redirect to login page (if applicable)
+        window.location.href = "/login"; // Change to your login route if necessary
+    }
 
 
 
-        });
+    });
 
 
             
