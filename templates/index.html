@@ -133,7 +133,7 @@
 
         <!-- Logout Button -->
         <div class="text-center mt-4">
-            <button class="btn btn-danger" onclick="logout()">Log Out</button>
+            <button class="btn btn-danger" id="logoutButton" onclick="logout()">Log Out</button>
         </div>
         
     </div>
@@ -141,142 +141,140 @@
 
 
     <!-- Add Bootstrap JS, Chart.js, and custom script -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        const moodForm = document.getElementById('mood-form');
-        const moodSelect = document.getElementById('mood-select');
-        const moodChart = document.getElementById('mood-chart').getContext('2d');
-        const insights = document.getElementById('insights');
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            const moodForm = document.getElementById('mood-form');
+            const moodSelect = document.getElementById('mood-select');
+            const moodChart = document.getElementById('mood-chart').getContext('2d');
+            const insights = document.getElementById('insights');
 
-        // Sample mood data
-        const moodData = [];
-        const moodLabels = [];
-        const moodCounts = { Happy: 0, Neutral: 0, Sad: 0, Anxious: 0, Excited: 0 };
+            // Sample mood data
+            const moodData = [];
+            const moodLabels = [];
+            const moodCounts = { Happy: 0, Neutral: 0, Sad: 0, Anxious: 0, Excited: 0 };
 
-        // Chart.js configuration
-        const chart = new Chart(moodChart, {
-            type: 'line',
-            data: {
-                labels: moodLabels,
-                datasets: [{
-                    label: 'Mood Trends',
-                    data: moodData,
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 2,
-                    tension: 0.2
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    x: { title: { display: true, text: 'Date' } },
-                    y: { title: { display: true, text: 'Mood' }, min: 0, max: 4, ticks: { stepSize: 1 } }
+            // Chart.js configuration
+            const chart = new Chart(moodChart, {
+                type: 'line',
+                data: {
+                    labels: moodLabels,
+                    datasets: [{
+                        label: 'Mood Trends',
+                        data: moodData,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 2,
+                        tension: 0.2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: { title: { display: true, text: 'Date' } },
+                        y: { title: { display: true, text: 'Mood' }, min: 0, max: 4, ticks: { stepSize: 1 } }
+                    }
                 }
-            }
-        });
+            });
 
-        // Handle mood logging
-        moodForm.addEventListener('submit', (event) => {
-            event.preventDefault();
-            const selectedMood = moodSelect.value;
-            if (selectedMood) {
-                const today = new Date().toLocaleDateString();
-                moodLabels.push(today);
-                moodData.push(Object.keys(moodCounts).indexOf(selectedMood));
-                moodCounts[selectedMood]++;
-                chart.update();
-
-                // Update insights
-                insights.innerText = `You've logged feeling "${selectedMood}" today. Keep it up!`;
-
-                // Clear the form
-                moodSelect.value = '';
-            }
-        });
-
-
-        // Chatbot functionality
-        const chatForm = document.getElementById('chat-form');
-        const messageInput = document.getElementById('message-input');
-        const chatBox = document.getElementById('chat-box');
-
-        chatForm.addEventListener('submit', async (event) => {
-            event.preventDefault();
-            const userMessage = messageInput.value.trim();
-            if (!userMessage) return;
-
-            // Display user's message
-            chatBox.innerHTML += `<div class="user-message">${userMessage}</div>`;
-            chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll to the latest message
-
-            // Add typing indicator
-            const typingIndicator = document.createElement("div");
-            typingIndicator.id = "typing-indicator";
-            typingIndicator.className = "bot-response";
-            typingIndicator.innerHTML = "<em>Typing...</em>";
-            chatBox.appendChild(typingIndicator);
-            chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll again
-
-            // Clear the input field
-            messageInput.value = '';
-
-            try {
-                // Send the user's message to the Flask backend
-                const response = await fetch('/chat', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ message: userMessage }),
-                });
-
-                // Remove typing indicator before displaying response
-                typingIndicator.remove();
-
-                // Parse the response from the backend
-                const data = await response.json();
-                const botResponse = data.response || 'Sorry, I did not understand that.';
-
-                // Display bot's response
-                chatBox.innerHTML += `<div class="bot-response">${botResponse}</div>`;
-                chatBox.scrollTop = chatBox.scrollHeight; // Ensure latest message is visible
-            } catch (error) {
-                console.error('Error communicating with chatbot:', error);
-                typingIndicator.remove();
-                chatBox.innerHTML += `<div class="bot-response text-danger">Sorry, something went wrong. Please try again later.</div>`;
-                chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll in case of error
-            }
-        });
-
-        messageInput.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter') {
+            // Handle mood logging
+            moodForm.addEventListener('submit', (event) => {
                 event.preventDefault();
-                chatForm.dispatchEvent(new Event('submit'));
-            }
+                const selectedMood = moodSelect.value;
+                if (selectedMood) {
+                    const today = new Date().toLocaleDateString();
+                    moodLabels.push(today);
+                    moodData.push(Object.keys(moodCounts).indexOf(selectedMood));
+                    moodCounts[selectedMood]++;
+                    chart.update();
+
+                    // Update insights
+                    insights.innerText = `You've logged feeling "${selectedMood}" today. Keep it up!`;
+
+                    // Clear the form
+                    moodSelect.value = '';
+                }
+            });
 
 
-    // add more functionality below:
-    function logout() {
-        fetch('/logout', {
-            method: 'GET', // You can also use 'POST' if you change the Flask route
-            credentials: 'include' // Ensures cookies (Flask session) are sent
-        })
-        .then(response => {
-            if (response.redirected) {
-                window.location.href = response.url; // Redirect to login
-            } else {
-                alert("Logout failed. Please try again.");
-            }
-        })
-        .catch(error => console.error("Logout error:", error));
-    }
+            // Chatbot functionality
+            const chatForm = document.getElementById('chat-form');
+            const messageInput = document.getElementById('message-input');
+            const chatBox = document.getElementById('chat-box');
 
+            chatForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const userMessage = messageInput.value.trim();
+                if (!userMessage) return;
 
+                // Display user's message
+                chatBox.innerHTML += `<div class="user-message">${userMessage}</div>`;
+                chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll to the latest message
 
-    });
-    </script>
+                // Add typing indicator
+                const typingIndicator = document.createElement("div");
+                typingIndicator.id = "typing-indicator";
+                typingIndicator.className = "bot-response";
+                typingIndicator.innerHTML = "<em>Typing...</em>";
+                chatBox.appendChild(typingIndicator);
+                chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll again
 
-</body>
-</html>
+                // Clear the input field
+                messageInput.value = '';
+
+                try {
+                    // Send the user's message to the Flask backend
+                    const response = await fetch('/chat', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ message: userMessage }),
+                    });
+
+                    // Remove typing indicator before displaying response
+                    typingIndicator.remove();
+
+                    // Parse the response from the backend
+                    const data = await response.json();
+                    const botResponse = data.response || 'Sorry, I did not understand that.';
+
+                    // Display bot's response
+                    chatBox.innerHTML += `<div class="bot-response">${botResponse}</div>`;
+                    chatBox.scrollTop = chatBox.scrollHeight; // Ensure latest message is visible
+                } catch (error) {
+                    console.error('Error communicating with chatbot:', error);
+                    typingIndicator.remove();
+                    chatBox.innerHTML += `<div class="bot-response text-danger">Sorry, something went wrong. Please try again later.</div>`;
+                    chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll in case of error
+                }
+            });
+
+            messageInput.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    chatForm.dispatchEvent(new Event('submit'));
+                }
+            });
+
+            // Logout function
+            document.getElementById('logoutButton').addEventListener('click', function() {
+                fetch('/logout', {
+                    method: 'GET',  // Logout happens via GET request to Flask route
+                    credentials: 'same-origin'  // Ensure the current session is maintained
+                })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = '/login';  // Redirect to login page
+                    } else {
+                        console.log('Logout failed');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error during logout:', error);
+                });
+            });
+        </script>
+
+    </body>
+    </html>
