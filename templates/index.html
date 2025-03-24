@@ -259,22 +259,23 @@
 
     // add more functionality below:
     function logout() {
-        // Example: Clear session storage or perform logout actions
-        alert("You have been logged out.");
-        // Redirect to login page (if applicable)
-        window.location.href = "/login"; // Change to your login route if necessary
+        fetch('/logout', {
+            method: 'GET', // You can also use 'POST' if you change the Flask route
+            credentials: 'include' // Ensures cookies (Flask session) are sent
+        })
+        .then(response => {
+            if (response.redirected) {
+                window.location.href = response.url; // Redirect to login
+            } else {
+                alert("Logout failed. Please try again.");
+            }
+        })
+        .catch(error => console.error("Logout error:", error));
     }
 
 
 
     });
-
-
-            
-
-
-    
-
     </script>
 
 </body>
