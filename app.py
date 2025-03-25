@@ -107,7 +107,7 @@ def login():
     user = User.query.filter_by(email=email).first()
 
     if user and check_password_hash(user.password, password):
-        login_user(user)  # Log the user in using Flask-Login
+        login_user(user, remember=True)  # Log the user in using Flask-Login
         flash('Login successful!', category='success')
         return jsonify({'message': 'Login successful!', 'redirect': url_for('home')})
 
@@ -254,7 +254,8 @@ def predict_tag(sentence):
     return classes[results[0][0]] if results else None
 
 
-# Map tag to response    
+
+# Map tag to response   
 def get_response(tag, intents_file='intents.json'):
     try:
         with open(intents_file, 'r') as file:
@@ -267,7 +268,9 @@ def get_response(tag, intents_file='intents.json'):
         return "Error: Intents file not found."
     except Exception as e:
         return f"Error: {str(e)}"
+    
 
+ 
 
 
 # ---------------- Routes ----------------
@@ -289,6 +292,23 @@ def find_related_faqs(user_message):
             return faq["answer"]
     return None
 
+# @app.route('/chat', methods=['POST'])
+# def chat():
+#     user_message = request.json.get('message', '').lower()
+    
+#     if not isinstance(user_message, str):
+#         return jsonify({"response": "Invalid input."})
+    
+#     tag = predict_tag(user_message)
+#     if tag:
+#         response = get_response(tag)
+#     else:
+#         response = find_related_faqs(user_message) or "I'm here to help! You can ask about exercises, crisis support, or FAQs."
+
+#     return jsonify({"response": response})
+
+
+
 @app.route('/chat', methods=['POST'])
 def chat():
     user_message = request.json.get('message', '').lower()
@@ -296,7 +316,36 @@ def chat():
     if not isinstance(user_message, str):
         return jsonify({"response": "Invalid input."})
     
+    # Check for HELP REQUESTS
+    if "help" in user_message or "need help" in user_message:
+        # Crisis Help
+        if any(word in user_message for word in ["urgent", "crisis", "emergency", "suicidal", "danger"]):
+            return jsonify({"response": "I'm really sorry you're feeling this way. Please consider reaching out to a crisis helpline. If you're in immediate danger, please call emergency services. Would you like me to find a helpline for your country?"})
+
+        # Resource Help
+        elif any(word in user_message for word in ["resources", "guides", "information", "support"]):
+            return jsonify({"response": "I have a collection of mental health resources, including guides on managing stress, coping strategies, and professional support contacts. Would you like to see some?"})
+
+        # Advice Help
+        elif any(word in user_message for word in ["advice", "guidance", "tips", "suggestions"]):
+            return jsonify({"response": "I'm happy to offer guidance! You can ask about stress relief, mindfulness, or self-care techniques. What specifically would you like advice on?"})
+
+        # General Help Menu
+        else:
+            return jsonify({"response": """
+            Sure! Here are some ways I can assist you:
+
+            - Mental Health Advice (Ask: "How do I cope with stress?")
+            - Find Resources (Ask: "Where can I get support?")
+            - Crisis Help (Ask: "I need urgent help")
+            - Mindfulness Exercises (Ask: "Guide me through deep breathing")
+
+            Let me know how I can support you.
+            """})
+
+    # If "help" is not detected, continue with chatbot flow
     tag = predict_tag(user_message)
+    
     if tag:
         response = get_response(tag)
     else:
