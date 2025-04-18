@@ -143,6 +143,50 @@ def login():
 
 
 
+# Route for gratitude logging
+@app.route('/save_gratitude', methods=['POST'])
+@login_required
+def save_gratitude():
+    data = request.json
+    date = data['date']
+    entry1 = data['entry1']
+    entry2 = data['entry2']
+    entry3 = data['entry3']
+
+    existing = GratitudeLog.query.filter_by(user_id=current_user.id, date=date).first()
+    if existing:
+        return jsonify({"message": "You've already submitted gratitude for today."}), 400
+
+    gratitude = GratitudeLog(
+        user_id=current_user.id,
+        date=date,
+        entry1=entry1,
+        entry2=entry2,
+        entry3=entry3
+    )
+    db.session.add(gratitude)
+    db.session.commit()
+
+    return jsonify({"message": "Gratitude logged successfully!"})
+
+
+# Route for viewing gratitude logs
+@app.route('/gratitude_logs', methods=['GET'])
+@login_required
+def gratitude_logs():
+    logs = GratitudeLog.query.filter_by(user_id=current_user.id).order_by(GratitudeLog.date.desc()).all()
+    return jsonify([
+        {
+            "date": log.date,
+            "entry1": log.entry1,
+            "entry2": log.entry2,
+            "entry3": log.entry3
+        }
+        for log in logs
+    ])
+
+
+
 
 
 # Route for logging out

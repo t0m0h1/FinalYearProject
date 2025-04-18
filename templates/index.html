@@ -82,6 +82,33 @@
             <p id="insights" class="text-center">Log your mood to receive personalised tips and insights based on your patterns.</p>
         </div>
 
+
+        <!-- Gratitude Log Section -->
+        <div class="mood-container">
+            <h3 class="text-center mb-3">Daily Gratitude Log</h3>
+            <p class="text-center">Take a moment to write down 3 things you're grateful for today.</p>
+            <form id="gratitude-form" class="text-center">
+                <div class="mb-2">
+                    <input type="text" class="form-control mb-2" placeholder="Grateful for #1" name="gratitude1" required>
+                    <input type="text" class="form-control mb-2" placeholder="Grateful for #2" name="gratitude2" required>
+                    <input type="text" class="form-control mb-2" placeholder="Grateful for #3" name="gratitude3" required>
+                </div>
+                <button type="submit" class="btn btn-warning">Log Gratitude</button>
+            </form>
+            <div id="gratitude-confirmation" class="mt-3 text-success fw-bold text-center" style="display: none;">
+                Thank you! Your gratitude entries have been logged. 🌟
+            </div>
+        </div>
+
+        <!-- Past Gratitude Entries -->
+        <div id="gratitude-list" class="mt-4">
+            <!-- Entries will be inserted here -->
+        </div>
+
+
+
+
+
         <!-- User Guidance Section -->
         <div class="guidance-container">
             <h3 class="text-center mb-3">User Guidance</h3>
@@ -256,6 +283,87 @@
                     chatForm.dispatchEvent(new Event('submit'));
                 }
             });
+
+
+            // Handle gratitude form submission
+            const gratitudeForm = document.getElementById('gratitude-form');
+            const gratitudeConfirmation = document.getElementById('gratitude-confirmation');
+            const gratitudeList = document.getElementById('gratitude-list');
+
+            gratitudeForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+
+                const formData = new FormData(gratitudeForm);
+                const entries = [
+                    formData.get('gratitude1'),
+                    formData.get('gratitude2'),
+                    formData.get('gratitude3')
+                ];
+
+                try {
+                    const response = await fetch('/log_gratitude', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ entries })
+                    });
+
+                    if (response.ok) {
+                        gratitudeForm.reset();
+                        gratitudeConfirmation.style.display = 'block';
+                        fetchGratitudeEntries();  // Refresh list
+
+                        setTimeout(() => {
+                            gratitudeConfirmation.style.display = 'none';
+                        }, 4000);
+                    } else {
+                        alert('Failed to save gratitude. Try again.');
+                    }
+                } catch (error) {
+                    console.error('Error saving gratitude:', error);
+                }
+            });
+
+            // Fetch and display past gratitude entries
+            async function fetchGratitudeEntries() {
+                try {
+                    const response = await fetch('/get_gratitude_entries');
+                    const data = await response.json();
+
+                    gratitudeList.innerHTML = '';
+                    if (data.entries.length === 0) {
+                        gratitudeList.innerHTML = '<p class="text-muted text-center">No entries yet. Start by logging something today!</p>';
+                        return;
+                    }
+
+                    data.entries.forEach((entry) => {
+                        const entryDiv = document.createElement('div');
+                        entryDiv.className = 'mb-3 p-3 bg-light rounded border';
+                        entryDiv.innerHTML = `
+                            <strong>Date:</strong> ${entry.date}<br>
+                            <ul class="mb-0">
+                                <li>${entry.entry1}</li>
+                                <li>${entry.entry2}</li>
+                                <li>${entry.entry3}</li>
+                            </ul>
+                        `;
+                        gratitudeList.appendChild(entryDiv);
+                    });
+
+                } catch (error) {
+                    console.error('Error fetching entries:', error);
+                }
+            }
+
+            // Call once on page load
+            document.addEventListener('DOMContentLoaded', fetchGratitudeEntries);
+
+
+
+
+
+
+
+
 
             // Logout function
             document.getElementById('logoutButton').addEventListener('click', function() {
