@@ -293,7 +293,6 @@ GUIDED_EXERCISES = {
 }
 
 
-# add more to this data as this is currently placeholder data.
 
 
 
@@ -363,45 +362,44 @@ def find_related_faqs(user_message):
             return faq["answer"]
     return None
 
-# @app.route('/chat', methods=['POST'])
-# def chat():
-#     user_message = request.json.get('message', '').lower()
-    
-#     if not isinstance(user_message, str):
-#         return jsonify({"response": "Invalid input."})
-    
-#     tag = predict_tag(user_message)
-#     if tag:
-#         response = get_response(tag)
-#     else:
-#         response = find_related_faqs(user_message) or "I'm here to help! You can ask about exercises, crisis support, or FAQs."
 
-#     return jsonify({"response": response})
-
-
-
+# smart chat follow up
 @app.route('/chat', methods=['POST'])
 def chat():
     user_message = request.json.get('message', '').lower()
-    
+
     if not isinstance(user_message, str):
         return jsonify({"response": "Invalid input."})
-    
-    # Check for HELP REQUESTS
+
+    # Smart follow-up for negative mood expressions
+    negative_phrases = [
+        "i'm not okay", "i feel bad", "i'm sad", "feeling down",
+        "i feel hopeless", "nothing feels right", "i'm overwhelmed",
+        "i don't feel good", "i'm anxious", "i'm scared", "i'm depressed"
+    ]
+
+    if any(phrase in user_message for phrase in negative_phrases):
+        grounding_exercise = random.choice(GUIDED_EXERCISES["mindfulness"])
+        return jsonify({
+            "response": (
+                "It sounds like you're having a tough time. I'm here for you.\n\n"
+                f"Would you like to try a grounding exercise? Here's one:\n\n"
+                f"**{grounding_exercise['name']}**\n"
+                f"{grounding_exercise['instructions']}"
+            )
+        })
+
+    # Help Requests
     if "help" in user_message or "need help" in user_message:
-        # Crisis Help
         if any(word in user_message for word in ["urgent", "crisis", "emergency", "suicidal", "danger"]):
             return jsonify({"response": "I'm really sorry you're feeling this way. Please consider reaching out to a crisis helpline. If you're in immediate danger, please call emergency services. Would you like me to find a helpline for your country?"})
 
-        # Resource Help
         elif any(word in user_message for word in ["resources", "guides", "information", "support"]):
             return jsonify({"response": "I have a collection of mental health resources, including guides on managing stress, coping strategies, and professional support contacts. Would you like to see some?"})
 
-        # Advice Help
         elif any(word in user_message for word in ["advice", "guidance", "tips", "suggestions"]):
             return jsonify({"response": "I'm happy to offer guidance! You can ask about stress relief, mindfulness, or self-care techniques. What specifically would you like advice on?"})
 
-        # General Help Menu
         else:
             return jsonify({"response": """
             Sure! Here are some ways I can assist you:
@@ -414,9 +412,8 @@ def chat():
             Let me know how I can support you.
             """})
 
-    # If "help" is not detected, continue with chatbot flow
     tag = predict_tag(user_message)
-    
+
     if tag:
         response = get_response(tag)
     else:
