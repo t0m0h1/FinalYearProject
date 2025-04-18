@@ -38,12 +38,39 @@ login_manager = LoginManager()
 login_manager.login_view = 'login'
 login_manager.init_app(app)
 
+
+
+# ----- Database models ----
+
 # Create user model (class user)
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(150), nullable=False)
     email = db.Column(db.String(150), nullable=False, unique=True)
     password = db.Column(db.String(150), nullable=False)
+
+
+# Create gratitude log model
+class GratitudeLog(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    date = db.Column(db.String(100), nullable=False)
+    entry1 = db.Column(db.String(300))
+    entry2 = db.Column(db.String(300))
+    entry3 = db.Column(db.String(300))
+
+
+
+# Define Mood model
+class Mood(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.String(100))
+    mood = db.Column(db.String(50))
+
+
+
+
+# --- Flask-Login user loader function ---
 
 
 @login_manager.user_loader
@@ -389,11 +416,7 @@ def get_moods():
     moods = Mood.query.all()
     return jsonify([(mood.date, mood.mood) for mood in moods])
 
-# Define Mood model
-class Mood(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.String(100))
-    mood = db.Column(db.String(50))
+
 
 
 
