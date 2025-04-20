@@ -171,6 +171,7 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script>
+            // Mood logging and charting functionality
             const moodForm = document.getElementById('mood-form');
             const moodSelect = document.getElementById('mood-select');
             const moodChart = document.getElementById('mood-chart').getContext('2d');
@@ -222,7 +223,6 @@
                     moodSelect.value = '';
                 }
             });
-
 
             // Chatbot functionality
             const chatForm = document.getElementById('chat-form');
@@ -284,6 +284,36 @@
                 }
             });
 
+            // Function to automatically start the conversation with a greeting
+            async function startChat() {
+                // Display chatbot's greeting message
+                const greetingMessage = "Hello! How can I help you today?";
+                chatBox.innerHTML += `<div class="bot-response">${greetingMessage}</div>`;
+                chatBox.scrollTop = chatBox.scrollHeight;
+
+                // Trigger the conversation flow by sending the greeting message to the backend
+                try {
+                    const response = await fetch('/chat', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ message: greetingMessage }),
+                    });
+
+                    const data = await response.json();
+                    const botResponse = data.response || 'Sorry, I did not understand that.';
+
+                    // Display bot's response
+                    chatBox.innerHTML += `<div class="bot-response">${botResponse}</div>`;
+                    chatBox.scrollTop = chatBox.scrollHeight; // Ensure latest message is visible
+                } catch (error) {
+                    console.error('Error starting chat:', error);
+                }
+            }
+
+            // Call startChat function to begin the conversation automatically when the page loads
+            document.addEventListener('DOMContentLoaded', startChat);
 
             // Handle gratitude form submission
             const gratitudeForm = document.getElementById('gratitude-form');
@@ -357,14 +387,6 @@
             // Call once on page load
             document.addEventListener('DOMContentLoaded', fetchGratitudeEntries);
 
-
-
-
-
-
-
-
-
             // Logout function
             document.getElementById('logoutButton').addEventListener('click', function() {
                 fetch('/logout', {
@@ -382,6 +404,10 @@
                     console.error('Error during logout:', error);
                 });
             });
+        </script>
+</script>
+
+
         </script>
 
     </body>
