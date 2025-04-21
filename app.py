@@ -365,6 +365,10 @@ def find_related_faqs(user_message):
 
 
 
+
+# Function to be used for mood analysis 
+
+# #####   Implement this later.
 def analyze_input(user_input):
     lower_input = user_input.lower()
 
@@ -379,7 +383,12 @@ def analyze_input(user_input):
 
 
 
+
+
+
 # Chat routes with smart follow-up and coping strategies
+import re
+
 @app.route('/chat', methods=['POST'])
 def chat():
     user_message = request.json.get('message', '').lower()
@@ -392,13 +401,16 @@ def chat():
         return jsonify({"response": f"Hello! How can I help you today?"})
 
     # Smart follow-up for negative mood expressions
-    negative_phrases = [
-        "i'm not okay", "i feel bad", "i'm sad", "feeling down",
-        "i feel hopeless", "nothing feels right", "i'm overwhelmed",
-        "i don't feel good", "i'm anxious", "i'm scared", "i'm depressed", "i'm stressed", 
+    negative_keywords = [
+        "okay", "bad", "sad", "down", "hopeless", "right", "overwhelmed", "good", "anxious", "scared", "depressed", "stressed"
     ]
 
-    if any(phrase in user_message for phrase in negative_phrases):
+    negative_patterns = [
+        r"\b(not\s+okay|feeling\s+bad|feeling\s+sad|feeling\s+down|feeling\s+hopeless|not\s+right|feeling\s+overwhelmed|don't\s+feel\s+good|feeling\s+anxious|feeling\s+scared|feeling\s+depressed|feeling\s+stressed)\b"
+    ]
+
+    # Use a regex to catch various negative expressions
+    if any(re.search(pattern, user_message) for pattern in negative_patterns) or any(keyword in user_message for keyword in negative_keywords):
         grounding_exercise = random.choice(GUIDED_EXERCISES["mindfulness"])
         return jsonify({
             "response": (
@@ -420,6 +432,31 @@ def chat():
     elif user_message == 'no':
         return jsonify({
             "response": "Alright, if you want to talk or need help with something else, I'm here for you."
+        })
+    
+    elif user_message == 'no thanks':
+        return jsonify({
+            "response": "No problem! If you change your mind or need anything else, just let me know."
+        })
+    
+    elif user_message == 'thank you' or user_message == 'thanks':
+        return jsonify({
+            "response": "You're welcome! I'm here to help. If you have any other questions or need support, just ask."
+        })
+    
+    elif user_message == 'stop':
+        return jsonify({
+            "response": "Okay, if you need me later, just let me know!"
+        })
+    
+    elif user_message == 'help':
+        return jsonify({
+            "response": "I'm here to help! You can ask about exercises, crisis support, or FAQs."
+        })
+    
+    elif user_message == 'resources':
+        return jsonify({
+            "response": "I have a collection of mental health resources, including guides on managing stress, coping strategies, and professional support contacts. Would you like to see some?"
         })
 
     # Help Requests
@@ -453,68 +490,6 @@ def chat():
         response = find_related_faqs(user_message) or "I'm here to help! You can ask about exercises, crisis support, or FAQs."
 
     return jsonify({"response": response})
-
-
-
-
-
-# # smart chat follow up
-# @app.route('/chat', methods=['POST'])
-# def chat():
-#     user_message = request.json.get('message', '').lower()
-
-#     if not isinstance(user_message, str):
-#         return jsonify({"response": "Invalid input."})
-
-#     # Smart follow-up for negative mood expressions
-#     negative_phrases = [
-#         "i'm not okay", "i feel bad", "i'm sad", "feeling down",
-#         "i feel hopeless", "nothing feels right", "i'm overwhelmed",
-#         "i don't feel good", "i'm anxious", "i'm scared", "i'm depressed"
-#     ]
-
-#     if any(phrase in user_message for phrase in negative_phrases):
-#         grounding_exercise = random.choice(GUIDED_EXERCISES["mindfulness"])
-#         return jsonify({
-#             "response": (
-#                 "It sounds like you're having a tough time. I'm here for you.\n\n"
-#                 f"Would you like to try a grounding exercise? Here's one:\n\n"
-#                 f"**{grounding_exercise['name']}**\n"
-#                 f"{grounding_exercise['instructions']}"
-#             )
-#         })
-
-#     # Help Requests
-#     if "help" in user_message or "need help" in user_message:
-#         if any(word in user_message for word in ["urgent", "crisis", "emergency", "suicidal", "danger"]):
-#             return jsonify({"response": "I'm really sorry you're feeling this way. Please consider reaching out to a crisis helpline. If you're in immediate danger, please call emergency services. Would you like me to find a helpline for your country?"})
-
-#         elif any(word in user_message for word in ["resources", "guides", "information", "support"]):
-#             return jsonify({"response": "I have a collection of mental health resources, including guides on managing stress, coping strategies, and professional support contacts. Would you like to see some?"})
-
-#         elif any(word in user_message for word in ["advice", "guidance", "tips", "suggestions"]):
-#             return jsonify({"response": "I'm happy to offer guidance! You can ask about stress relief, mindfulness, or self-care techniques. What specifically would you like advice on?"})
-
-#         else:
-#             return jsonify({"response": """
-#             Sure! Here are some ways I can assist you:
-
-#             - Mental Health Advice (Ask: "How do I cope with stress?")
-#             - Find Resources (Ask: "Where can I get support?")
-#             - Crisis Help (Ask: "I need urgent help")
-#             - Mindfulness Exercises (Ask: "Guide me through deep breathing")
-
-#             Let me know how I can support you.
-#             """})
-
-#     tag = predict_tag(user_message)
-
-#     if tag:
-#         response = get_response(tag)
-#     else:
-#         response = find_related_faqs(user_message) or "I'm here to help! You can ask about exercises, crisis support, or FAQs."
-
-#     return jsonify({"response": response})
 
 
 
