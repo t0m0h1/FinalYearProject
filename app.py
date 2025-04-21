@@ -395,7 +395,7 @@ def chat():
     negative_phrases = [
         "i'm not okay", "i feel bad", "i'm sad", "feeling down",
         "i feel hopeless", "nothing feels right", "i'm overwhelmed",
-        "i don't feel good", "i'm anxious", "i'm scared", "i'm depressed"
+        "i don't feel good", "i'm anxious", "i'm scared", "i'm depressed", "i'm stressed", 
     ]
 
     if any(phrase in user_message for phrase in negative_phrases):
