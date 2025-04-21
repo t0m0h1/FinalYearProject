@@ -287,29 +287,9 @@
             // Function to automatically start the conversation with a greeting
             async function startChat() {
                 // Display chatbot's greeting message
-                const greetingMessage = "Hello! How can I help you today?";
+                const greetingMessage = "How can I help you today?";
                 chatBox.innerHTML += `<div class="bot-response">${greetingMessage}</div>`;
                 chatBox.scrollTop = chatBox.scrollHeight;
-
-                // Trigger the conversation flow by sending the greeting message to the backend
-                try {
-                    const response = await fetch('/chat', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ message: greetingMessage }),
-                    });
-
-                    const data = await response.json();
-                    const botResponse = data.response || 'Sorry, I did not understand that.';
-
-                    // Display bot's response
-                    chatBox.innerHTML += `<div class="bot-response">${botResponse}</div>`;
-                    chatBox.scrollTop = chatBox.scrollHeight; // Ensure latest message is visible
-                } catch (error) {
-                    console.error('Error starting chat:', error);
-                }
             }
 
             // Call startChat function to begin the conversation automatically when the page loads
