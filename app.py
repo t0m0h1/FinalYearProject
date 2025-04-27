@@ -69,6 +69,15 @@ class Mood(db.Model):
     mood = db.Column(db.String(50))
 
 
+# Define JournalEntry model
+class JournalEntry(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    date = db.Column(db.String(100), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+
+
+
 
 
 # --- Flask-Login user loader function ---
@@ -354,6 +363,45 @@ def home():
     return render_template('index.html')  # HTML for the chatbot interface
 
 
+@app.route('/save_journal', methods=['POST'])
+@login_required
+def save_journal():
+    data = request.json
+    date = data['date']
+    content = data['content']
+
+    existing_entry = JournalEntry.query.filter_by(user_id=current_user.id, date=date).first()
+    if existing_entry:
+        return jsonify({"message": "You've already written a journal for today."}), 400
+
+    new_entry = JournalEntry(
+        user_id=current_user.id,
+        date=date,
+        content=content
+    )
+    db.session.add(new_entry)
+    db.session.commit()
+
+    return jsonify({"message": "Journal entry saved successfully!"})
+
+
+@app.route('/journal_logs', methods=['GET'])
+@login_required
+def journal_logs():
+    logs = JournalEntry.query.filter_by(user_id=current_user.id).order_by(JournalEntry.date.desc()).all()
+    return jsonify([
+        {
+            "date": log.date,
+            "content": log.content
+        }
+        for log in logs
+    ])
+
+
+
+
+
+
 
 # app will find related faqs if no confident prediction is made.
 def find_related_faqs(user_message):
@@ -362,7 +410,6 @@ def find_related_faqs(user_message):
         if any(word in user_message for word in faq["question"].lower().split()):
             return faq["answer"]
     return None
-
 
 
 
@@ -521,7 +568,8 @@ def save_mood():
 
     return jsonify({"message": "Mood saved successfully"})
 
-# Get moods using SQLAlchemy
+
+# Get moods using SQL
 @app.route('/get_moods', methods=['GET'])
 def get_moods():
     moods = Mood.query.all()

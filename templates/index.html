@@ -131,6 +131,20 @@
             </form>
         </div>
 
+        <!-- Journal Entry Section -->
+<div class="mood-container">
+    <h3 class="text-center mb-3">Daily Journal</h3>
+    <p class="text-center">Write freely about your day, your thoughts, or anything you like.</p>
+    <form id="journal-form" class="text-center">
+        <textarea id="journal-entry" class="form-control mb-3" rows="5" placeholder="Write your journal entry here..." required></textarea>
+        <button type="submit" class="btn btn-info">Save Journal Entry</button>
+    </form>
+    <div id="journal-entries" class="mt-4">
+        <!-- Past journal entries will appear here -->
+    </div>
+</div>
+
+
         <!-- Mood Trends Section -->
         <div class="chart-container">
             <h3 class="text-center mb-3">Mood Trends</h3>
@@ -226,13 +240,13 @@
         
     </div>
 
-        <!-- Settings Button and Menu -->
-        <button id="settingsButton" class="settings-btn">
-            ⚙️
-        </button>
-        <div id="settingsMenu">
-            <a href="#" id="darkModeToggle">Toggle Dark/Light Mode</a>
-        </div>
+    <!-- Settings Button and Menu -->
+    <button id="settingsButton" class="settings-btn">
+        ⚙️
+    </button>
+    <div id="settingsMenu">
+        <a href="#" id="darkModeToggle">Toggle Dark/Light Mode</a>
+    </div>
 
 
 
@@ -275,23 +289,22 @@
             });
 
 
-                    // Dark/Light Mode Toggle functionality
-        const settingsButton = document.getElementById('settingsButton');
-        const settingsMenu = document.getElementById('settingsMenu');
-        const darkModeToggle = document.getElementById('darkModeToggle');
-        const body = document.body;
+            // Dark/Light Mode Toggle functionality
+            const settingsButton = document.getElementById('settingsButton');
+            const settingsMenu = document.getElementById('settingsMenu');
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            const body = document.body;
 
-        // Toggle settings menu visibility
-        settingsButton.addEventListener('click', () => {
-            settingsMenu.style.display = settingsMenu.style.display === 'block' ? 'none' : 'block';
-        });
+            // Toggle settings menu visibility
+            settingsButton.addEventListener('click', () => {
+                settingsMenu.style.display = settingsMenu.style.display === 'block' ? 'none' : 'block';
+            });
 
-        // Toggle dark mode
-        darkModeToggle.addEventListener('click', () => {
-            body.classList.toggle('dark-mode');
-            settingsMenu.style.display = 'none'; // Hide settings menu after selection
-        });
-
+            // Toggle dark mode
+            darkModeToggle.addEventListener('click', () => {
+                body.classList.toggle('dark-mode');
+                settingsMenu.style.display = 'none'; // Hide settings menu after selection
+            });
 
 
             // Handle mood logging
@@ -473,6 +486,32 @@
                     console.error('Error during logout:', error);
                 });
             });
+
+            // Handle Journal Entries
+            const journalForm = document.getElementById('journal-form');
+            const journalEntryInput = document.getElementById('journal-entry');
+            const journalEntriesDiv = document.getElementById('journal-entries');
+
+            journalForm.addEventListener('submit', (event) => {
+                event.preventDefault();
+                const entryText = journalEntryInput.value.trim();
+                if (!entryText) return;
+
+                const entryDate = new Date().toLocaleDateString();
+                const entryHTML = `
+                    <div class="card mb-2">
+                        <div class="card-body">
+                            <h5 class="card-title">${entryDate}</h5>
+                            <p class="card-text">${entryText}</p>
+                        </div>
+                    </div>
+                `;
+
+                journalEntriesDiv.innerHTML = entryHTML + journalEntriesDiv.innerHTML;
+
+                journalEntryInput.value = ''; // Clear textarea
+            });
+
         </script>
 
     </body>
