@@ -7,6 +7,67 @@
     <!-- Add Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
+
+                /* Additional Styles for Light/Dark Mode */
+                body {
+            background-color: #f8f9fa;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .dark-mode body {
+            background-color: #121212;
+            color: #ffffff;
+        }
+        .container {
+            margin-top: 20px;
+        }
+        .chat-container, .mood-container, .chart-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .dark-mode .chat-container, .dark-mode .mood-container, .dark-mode .chart-container {
+            background-color: #333333;
+            color: white;
+        }
+        /* Settings Button */
+        .settings-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        .settings-btn:hover {
+            background-color: #0056b3;
+        }
+        /* Settings Dropdown */
+        #settingsMenu {
+            display: none;
+            position: absolute;
+            top: 60px;
+            right: 20px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        #settingsMenu a {
+            padding: 10px;
+            display: block;
+            text-decoration: none;
+            color: #007bff;
+        }
+        #settingsMenu a:hover {
+            background-color: #f1f1f1;
+        }
+
+
         body {
             background-color: #f8f9fa;
         }
@@ -165,6 +226,14 @@
         
     </div>
 
+        <!-- Settings Button and Menu -->
+        <button id="settingsButton" class="settings-btn">
+            ⚙️
+        </button>
+        <div id="settingsMenu">
+            <a href="#" id="darkModeToggle">Toggle Dark/Light Mode</a>
+        </div>
+
 
 
     <!-- Add Bootstrap JS, Chart.js, and custom script -->
@@ -204,6 +273,26 @@
                     }
                 }
             });
+
+
+                    // Dark/Light Mode Toggle functionality
+        const settingsButton = document.getElementById('settingsButton');
+        const settingsMenu = document.getElementById('settingsMenu');
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const body = document.body;
+
+        // Toggle settings menu visibility
+        settingsButton.addEventListener('click', () => {
+            settingsMenu.style.display = settingsMenu.style.display === 'block' ? 'none' : 'block';
+        });
+
+        // Toggle dark mode
+        darkModeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            settingsMenu.style.display = 'none'; // Hide settings menu after selection
+        });
+
+
 
             // Handle mood logging
             moodForm.addEventListener('submit', (event) => {
@@ -384,10 +473,6 @@
                     console.error('Error during logout:', error);
                 });
             });
-        </script>
-</script>
-
-
         </script>
 
     </body>
