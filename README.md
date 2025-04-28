@@ -12,6 +12,8 @@ Still have issues finding the template/ getting server to find html
 
 using Python 3.10.7 as it is compatible.
 
+Make sure you use python3 instead of python in bash commands.
+
 Check column names in training data match those in the code.
 
 Be careful using Windows. may have to create new virtual environment.
