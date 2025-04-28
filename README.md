@@ -3,8 +3,7 @@ Student Mental Health Web Application
 
 
 # How to use the app:
-git clone https://github.com/your-username/mental-health-assistant.git
-cd mental-health-assistant
+git clone (url on the clone button)
 
 select python 3.10.7 from environments
 
