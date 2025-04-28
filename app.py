@@ -463,7 +463,7 @@ def chat():
             "response": (
                 "It sounds like you're having a tough time. I'm here for you.\n\n"
                 f"Would you like to try a grounding exercise? Here's one:\n\n"
-                f"{grounding_exercise['name']}\n"
+                f"{grounding_exercise['name']}.\n"
                 f"{grounding_exercise['instructions']}\n\n"
                 "Please reply with 'yes' to try it or 'no' to talk about something else."
             )
