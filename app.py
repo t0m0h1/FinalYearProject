@@ -496,12 +496,12 @@ def chat():
             "response": "Okay, if you need me later, just let me know!"
         })
     
-    elif user_message == 'help':
+    elif user_message == 'help' or user_message == 'help me' or user_message == 'need help':
         return jsonify({
             "response": "I'm here to help! You can ask about exercises, crisis support, or FAQs."
         })
     
-    elif user_message == 'resources':
+    elif user_message == 'resources' or user_message == 'resource' or user_message == 'mental health resources':
         return jsonify({
             "response": "I have a collection of mental health resources, including guides on managing stress, coping strategies, and professional support contacts. Would you like to see some?"
         })
@@ -529,6 +529,18 @@ def chat():
             Let me know how I can support you.
             """})
 
+    # Emotional check-ins and smart follow-ups
+    if "feeling" in user_message or "mood" in user_message:
+        if any(word in user_message for word in ["good", "great", "fine", "happy"]):
+            return jsonify({
+                "response": "I'm glad to hear you're feeling good! Keep it up. Let me know if you ever need support or just want to chat."
+            })
+        elif any(word in user_message for word in ["okay", "neutral", "indifferent"]):
+            return jsonify({
+                "response": "It's alright to feel that way. I'm here for you if you want to talk or need any support."
+            })
+
+    # Handle specific queries or FAQ-like requests
     tag = predict_tag(user_message)
 
     if tag:
@@ -537,6 +549,117 @@ def chat():
         response = find_related_faqs(user_message) or "I'm here to help! You can ask about exercises, crisis support, or FAQs."
 
     return jsonify({"response": response})
+
+
+
+
+
+
+
+# # Chat routes with smart follow-up and coping strategies
+# import re
+
+# @app.route('/chat', methods=['POST'])
+# def chat():
+#     user_message = request.json.get('message', '').lower()
+
+#     if not isinstance(user_message, str):
+#         return jsonify({"response": "Invalid input."})
+
+#     # Start the conversation with a greeting if it's the first message
+#     if user_message == 'start':
+#         return jsonify({"response": f"Hello! How can I help you today?"})
+
+#     # Smart follow-up for negative mood expressions
+#     negative_keywords = [
+#         "okay", "bad", "sad", "down", "hopeless", "right", "overwhelmed", "good", "anxious", "scared", "depressed", "stressed"
+#     ]
+
+#     negative_patterns = [
+#         r"\b(not\s+okay|feeling\s+bad|feeling\s+sad|feeling\s+down|feeling\s+hopeless|not\s+right|feeling\s+overwhelmed|don't\s+feel\s+good|feeling\s+anxious|feeling\s+scared|feeling\s+depressed|feeling\s+stressed)\b"
+#     ]
+
+#     # Use a regex to catch various negative expressions
+#     if any(re.search(pattern, user_message) for pattern in negative_patterns) or any(keyword in user_message for keyword in negative_keywords):
+#         grounding_exercise = random.choice(GUIDED_EXERCISES["mindfulness"])
+#         return jsonify({
+#             "response": (
+#                 "It sounds like you're having a tough time. I'm here for you.\n\n"
+#                 f"Would you like to try a grounding exercise? Here's one:\n\n"
+#                 f"{grounding_exercise['name']}.\n"
+#                 f"{grounding_exercise['instructions']}\n\n"
+#                 "Please reply with 'yes' to try it or 'no' to talk about something else."
+#             )
+#         })
+
+#     # Handle user response to 'yes' or 'no' for coping strategies
+#     if user_message == 'yes':
+#         grounding_exercise = random.choice(GUIDED_EXERCISES["mindfulness"])
+#         return jsonify({
+#             "response": f"Great! Let's get started with: {grounding_exercise['name']}-\n{grounding_exercise['instructions']}"
+#         })
+
+#     elif user_message == 'no':
+#         return jsonify({
+#             "response": "Alright, if you want to talk or need help with something else, I'm here for you."
+#         })
+    
+#     elif user_message == 'no thanks':
+#         return jsonify({
+#             "response": "No problem! If you change your mind or need anything else, just let me know."
+#         })
+    
+#     elif user_message == 'thank you' or user_message == 'thanks':
+#         return jsonify({
+#             "response": "You're welcome! I'm here to help. If you have any other questions or need support, just ask."
+#         })
+    
+#     elif user_message == 'stop':
+#         return jsonify({
+#             "response": "Okay, if you need me later, just let me know!"
+#         })
+    
+#     elif user_message == 'help':
+#         return jsonify({
+#             "response": "I'm here to help! You can ask about exercises, crisis support, or FAQs."
+#         })
+    
+#     elif user_message == 'resources':
+#         return jsonify({
+#             "response": "I have a collection of mental health resources, including guides on managing stress, coping strategies, and professional support contacts. Would you like to see some?"
+#         })
+
+#     # Help Requests
+#     if "help" in user_message or "need help" in user_message:
+#         if any(word in user_message for word in ["urgent", "crisis", "emergency", "suicidal", "danger"]):
+#             return jsonify({"response": "I'm really sorry you're feeling this way. Please consider reaching out to a crisis helpline. If you're in immediate danger, please call emergency services. Would you like me to find a helpline for your country?"})
+
+#         elif any(word in user_message for word in ["resources", "guides", "information", "support"]):
+#             return jsonify({"response": "I have a collection of mental health resources, including guides on managing stress, coping strategies, and professional support contacts. Would you like to see some?"})
+
+#         elif any(word in user_message for word in ["advice", "guidance", "tips", "suggestions"]):
+#             return jsonify({"response": "I'm happy to offer guidance! You can ask about stress relief, mindfulness, or self-care techniques. What specifically would you like advice on?"})
+
+#         else:
+#             return jsonify({"response": """
+#             Sure! Here are some ways I can assist you:
+
+#             - Mental Health Advice (Ask: "How do I cope with stress?")
+#             - Find Resources (Ask: "Where can I get support?")
+#             - Crisis Help (Ask: "I need urgent help")
+#             - Mindfulness Exercises (Ask: "Guide me through deep breathing")
+
+#             Let me know how I can support you.
+#             """})
+
+#     tag = predict_tag(user_message)
+
+#     if tag:
+#         response = get_response(tag)
+#     else:
+#         response = find_related_faqs(user_message) or "I'm here to help! You can ask about exercises, crisis support, or FAQs."
+
+#     return jsonify({"response": response})
 
 
 
