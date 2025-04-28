@@ -473,7 +473,7 @@ def chat():
     if user_message == 'yes':
         grounding_exercise = random.choice(GUIDED_EXERCISES["mindfulness"])
         return jsonify({
-            "response": f"Great! Let's get started with: **{grounding_exercise['name']}**\n{grounding_exercise['instructions']}"
+            "response": f"Great! Let's get started with: {grounding_exercise['name']}-\n{grounding_exercise['instructions']}"
         })
 
     elif user_message == 'no':
