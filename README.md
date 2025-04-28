@@ -2,6 +2,37 @@
 Student Mental Health Web Application 
 
 
+# How to use the app:
+git clone https://github.com/your-username/mental-health-assistant.git
+cd mental-health-assistant
+
+select python 3.10.7 from environments
+
+run app.py
+
+Open your browser and go to:
+http://127.0.0.1:5000/
+
+
+# If normal environment is not working:
+python -m venv venv
+source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+
+
+If db interactions are needed:
+"
+python
+>>> from app import db
+>>> db.create_all()
+>>> exit()
+"
+
+
+
+
+
+
+
 ### New features:
 - Maybe generate the FAQs next to or within the chat container.
 
